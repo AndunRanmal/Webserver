@@ -6,18 +6,19 @@ port=8080
 c=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 c.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 c.bind((host,port))
-c.listen(1)
+c.listen(1) #1-how many machines can be connected to the server
 print 'Server run on port %s....' %port
 
 
-while 1:
+while True:
     csock,caddr = c.accept()
+    
     cfile = csock.makefile('rw',0)
 
     line = cfile.readline().strip()
 
     cfile.write('HTTP/1.0 200  OK\n\n')
-    cfile.write('<html><head><title>My First Web Server. It on port %s</title></head>')
+    cfile.write('<html><head><title>My First Web Server.</title></head>')
     cfile.write('<body><h1>Follow the link</h1>')
     cfile.write('All the server needs to is deliver the text to the socket')
     cfile.write('It delivers the HTML code to the serveer')
@@ -26,7 +27,11 @@ while 1:
     cfile.write('<p>This link direct you to get help to build a web server</p>')
     cfile.write('</body></html>')
     cfile.close()
-    #csock.close()
+
+    request=csock.recv(1024)
+    print request
+    print caddr
+    csock.close()
     
     
 
